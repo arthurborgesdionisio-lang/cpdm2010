@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Área Exclusiva</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Tela 1: Login -->
+  <div id="screen-login" class="screen">
+    <div class="card">
+      <h1>ÁREA EXCLUSIVA</h1>
+
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="username">Usuário</label>
+          <input type="text" id="username" placeholder="Digite seu usuário" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <input type="password" id="password" placeholder="Digite sua senha" required>
+        </div>
+
+        <div id="error-msg" class="error-msg">Usuário ou senha incorretos!</div>
+
+        <button type="submit" class="btn-red">Entrar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tela 2: Cronômetro Regressivo -->
+  <div id="screen-timer" class="screen hidden">
+    <div class="timer-card">
+      <div class="timer-title">Contagem Regressiva para</div>
+      <div class="target-date-title">10 de Dezembro de 2026</div>
+      
+      <div class="countdown-grid">
+        <div class="time-box">
+          <span class="number" id="days">00</span>
+          <span class="label">Dias</span>
+        </div>
+        <div class="time-box">
+          <span class="number" id="hours">00</span>
+          <span class="label">Horas</span>
+        </div>
+        <div class="time-box">
+          <span class="number" id="minutes">00</span>
+          <span class="label">Minutos</span>
+        </div>
+        <div class="time-box">
+          <span class="number" id="seconds">00</span>
+          <span class="label">Segundos</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const USER_CORRETO = "vinho2010";
+    const SENHA_CORRETA = "cd10";
+
+    const targetDate = new Date('2027-02-20T00:00:00').getTime();
+    let timerInterval;
+
+    function handleLogin(event) {
+      event.preventDefault();
+
+      const userInput = document.getElementById('username').value;
+      const passInput = document.getElementById('password').value;
+      const errorMsg = document.getElementById('error-msg');
+
+      if (userInput === USER_CORRETO && passInput === SENHA_CORRETA) {
+        errorMsg.style.display = 'none';
+
+        document.getElementById('screen-login').classList.add('hidden');
+        document.getElementById('screen-timer').classList.remove('hidden');
+
+        updateCountdown();
+        timerInterval = setInterval(updateCountdown, 1000);
+      } else {
+        errorMsg.style.display = 'block';
+      }
+    }
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+
+      if (difference <= 0) {
+        clearInterval(timerInterval);
+        document.getElementById('days').innerText = '00';
+        document.getElementById('hours').innerText = '00';
+        document.getElementById('minutes').innerText = '00';
+        document.getElementById('seconds').innerText = '00';
+        return;
+      }
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      document.getElementById('days').innerText = String(days).padStart(2, '0');
+      document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+      document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+    }
+  </script>
+</body>
+</html>
